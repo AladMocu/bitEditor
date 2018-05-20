@@ -8,8 +8,6 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-
-#define CPU_ID _asm _emit 0x0f _asm _emit 0xa2 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)                                                   \
 	(byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'),                      \
@@ -95,9 +93,26 @@ int main(int argc, char *argv[]) {
 	Procedimiento que escribe s empezando en el bit p de V
 */
 void escribir(unsigned char *V, unsigned char *s, int p) {
-		_asm
+	
+	 char _mask = -1;
+	 char tv133 = -36;
+	 char _x$ = -32; 
+	 char _cap$1 = -28; 
+	 char _k$2 = -24; 
+	 char _pos$ = -20; 
+	 char _i$3 = -16; 
+	 char _i$4 = -12; 
+	 char _j$5 = -8; 
+	 char _y$6 = -4; 
+	 char _primera$ = -3; 
+	 char _tMask$7 = -2; 
+	 char _mask$ = -1; 
+	 char _V$ = 8; 
+	 char _s$ = 12; 
+	 char _p$ = 16;
+	_asm
 	{
-	mov	BYTE PTR _mask$[ebp], 128	
+	mov	BYTE PTR _mask[ebp], 128	
 	mov	eax, DWORD PTR _s$[ebp]
 	push	eax
 	call	_strlen
@@ -109,7 +124,7 @@ For1Iteracion:
 	mov	ecx, DWORD PTR _i$4[ebp]
 	add	ecx, 1
 	mov	DWORD PTR _i$4[ebp], ecx  
-primerFor
+primerFor:
 	mov	edx, DWORD PTR _i$4[ebp]  ;linea del error
 	cmp	edx, DWORD PTR _x$[ebp]
 	jge	SHORT salir1
@@ -233,7 +248,31 @@ FinalEnd:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
+
+
+_strlen:
+
+  push  ecx            ; save and clear out counter
+  xor   ecx, ecx
+
+_strlen_next:
+
+  cmp   [edi],  0 
+  jz    _strlen_null  
+
+  inc   ecx            
+  inc   edi            
+  jmp   _strlen_next   
+
+_strlen_null:
+
+  mov   eax, ecx       
+
+  pop   ecx            
+  ret                 
 	}
+
+
 }
 
 /*
@@ -242,6 +281,20 @@ FinalEnd:
 */
 void leer(unsigned char *V, unsigned char *s, int p, int l) {
 
+char tv86 = -32						; 
+char _cap$1 = -28					;
+char _j$2 = -24						;
+char _pos2$ = -20					; 
+char _k$3 = -16						; 
+char _pos$ = -12						; 
+char _i$4 = -8						; 
+char _tMask$5 = -3					; 
+char _primera$ = -2					; 
+char _mask$ = -1						; 
+char _V$ = 8							; 
+char _s$ = 12						; 
+char _p$ = 16						;
+char _l$ = 20						;
 	_asm
 	{
 	mov	BYTE PTR _mask$[ebp], 128	
@@ -260,48 +313,48 @@ void leer(unsigned char *V, unsigned char *s, int p, int l) {
 	sar	eax, 3
 	mov	DWORD PTR _j$2[ebp], eax
 	mov	DWORD PTR _k$3[ebp], 0
-	jmp	SHORT $LN4@leer
-$LN2@leer:
+	jmp	SHORT ForLeer
+theendleer:
 	mov	eax, DWORD PTR _j$2[ebp]
 	add	eax, 1
 	mov	DWORD PTR _j$2[ebp], eax
 	mov	ecx, DWORD PTR _k$3[ebp]
 	add	ecx, 1
 	mov	DWORD PTR _k$3[ebp], ecx
-$LN4@leer:
+ForLeer:
 	cmp	DWORD PTR _k$3[ebp], 4
-	jge	$LN1@leer
+	jge	theendleer2
 	mov	BYTE PTR _mask$[ebp], 128	
 	movsx	edx, BYTE PTR _primera$[ebp]
 	cmp	edx, 1
-	jne	SHORT $LN8@leer
+	jne	SHORT continueleer
 	mov	eax, DWORD PTR _p$[ebp]
 	and	eax, -2147483641			
-	jns	SHORT $LN14@leer
+	jns	SHORT leercontinue2
 	dec	eax
-	or	eax, -8				H
+	or	eax, -8				
 	inc	eax
-$LN14@leer:
+leercontinue2:
 	mov	DWORD PTR _cap$1[ebp], eax
-	jmp	SHORT $LN9@leer
-$LN8@leer:
+	jmp	SHORT ContinueLeer3
+continueleer:
 	mov	DWORD PTR _cap$1[ebp], 0
-$LN9@leer:
+ContinueLeer3:
 	mov	ecx, DWORD PTR _cap$1[ebp]
 	mov	DWORD PTR _i$4[ebp], ecx
-	jmp	SHORT $LN7@leer
-$LN5@leer:
+	jmp	SHORT elseleer
+salirleer:
 	mov	edx, DWORD PTR _i$4[ebp]
 	add	edx, 1
 	mov	DWORD PTR _i$4[ebp], edx
-$LN7@leer:
+elseleer:
 	cmp	DWORD PTR _i$4[ebp], 8
-	jge	SHORT $LN6@leer
+	jge	SHORT finleer
 	mov	eax, DWORD PTR _pos$[ebp]
 	cmp	eax, DWORD PTR _l$[ebp]
-	jne	SHORT $LN10@leer
-	jmp	SHORT $LN6@leer
-$LN10@leer:
+	jne	SHORT continueleer4
+	jmp	SHORT finleer
+continueleer4:
 	movzx	edx, BYTE PTR _mask$[ebp]
 	mov	ecx, DWORD PTR _i$4[ebp]
 	sar	edx, cl
@@ -311,12 +364,12 @@ $LN10@leer:
 	movzx	ecx, BYTE PTR [eax]
 	movsx	edx, BYTE PTR _tMask$5[ebp]
 	and	ecx, edx
-	je	SHORT $LN12@leer
+	je	SHORT continueleer5
 	mov	DWORD PTR tv86[ebp], 49			
-	jmp	SHORT $LN13@leer
-$LN12@leer:
+	jmp	SHORT jumpnextblock
+continueleer5:
 	mov	DWORD PTR tv86[ebp], 48			
-$LN13@leer:
+jumpnextblock:
 	mov	eax, DWORD PTR _s$[ebp]
 	add	eax, DWORD PTR _pos$[ebp]
 	mov	cl, BYTE PTR tv86[ebp]
@@ -325,17 +378,16 @@ $LN13@leer:
 	mov	edx, DWORD PTR _pos$[ebp]
 	add	edx, 1
 	mov	DWORD PTR _pos$[ebp], edx
-	jmp	SHORT $LN5@leer
-$LN6@leer:
+	jmp	SHORT salirleer
+finleer:
 	mov	eax, DWORD PTR _pos2$[ebp]
 	add	eax, 1
 	mov	DWORD PTR _pos2$[ebp], eax
-	jmp	$LN2@leer
-$LN1@leer:
+	jmp	theendleer
+theendleer2:
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-_leer	ENDP
 
 
 	}
