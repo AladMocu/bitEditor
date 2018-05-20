@@ -9,6 +9,7 @@
 #include "stdlib.h"
 #include "string.h"
 
+#define CPU_ID _asm _emit 0x0f _asm _emit 0xa2 
 #define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)                                                   \
 	(byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'),                      \
@@ -96,7 +97,6 @@ int main(int argc, char *argv[]) {
 void escribir(unsigned char *V, unsigned char *s, int p) {
 		_asm
 	{
-	;sub	esp, 36
 	mov	BYTE PTR _mask$[ebp], 128	
 	mov	eax, DWORD PTR _s$[ebp]
 	push	eax
@@ -104,26 +104,26 @@ void escribir(unsigned char *V, unsigned char *s, int p) {
 	add	esp, 4
 	mov	DWORD PTR _x$[ebp], eax
 	mov	DWORD PTR _i$4[ebp], 0
-	jmp	SHORT $LN4@escribir
-$LN2@escribir:
+	jmp	SHORT primerFor
+For1Iteracion:
 	mov	ecx, DWORD PTR _i$4[ebp]
 	add	ecx, 1
-	mov	DWORD PTR _i$4[ebp], ecx
-$LN4@escribir:
-	mov	edx, DWORD PTR _i$4[ebp]
+	mov	DWORD PTR _i$4[ebp], ecx  
+primerFor
+	mov	edx, DWORD PTR _i$4[ebp]  ;linea del error
 	cmp	edx, DWORD PTR _x$[ebp]
-	jge	SHORT $LN3@escribir
+	jge	SHORT salir1
 
 	mov	eax, DWORD PTR _s$[ebp]
 	add	eax, DWORD PTR _i$4[ebp]
 	movzx	ecx, BYTE PTR [eax]
-	sub	ecx, 48					; 00000030H
+	sub	ecx, 48				
 	mov	edx, DWORD PTR _s$[ebp]
 	add	edx, DWORD PTR _i$4[ebp]
 	mov	BYTE PTR [edx], cl
 
-	jmp	SHORT $LN2@escribir
-$LN3@escribir:
+	jmp	SHORT For1Iteracion
+salir1:
 
 	mov	DWORD PTR _pos$[ebp], 0
 
@@ -134,52 +134,52 @@ $LN3@escribir:
 	sar	eax, 3
 	mov	DWORD PTR _j$5[ebp], eax
 	mov	DWORD PTR _k$2[ebp], 0
-	jmp	SHORT $LN7@escribir
-$LN5@escribir:
+	jmp	SHORT Bigfor1
+Bigfor:
 	mov	eax, DWORD PTR _j$5[ebp]
 	add	eax, 1
 	mov	DWORD PTR _j$5[ebp], eax
 	mov	ecx, DWORD PTR _k$2[ebp]
 	add	ecx, 1
 	mov	DWORD PTR _k$2[ebp], ecx
-$LN7@escribir:
+Bigfor1:
 	cmp	DWORD PTR _k$2[ebp], 3
-	jge	$LN1@escribir
+	jge	FinalEnd
 
 	mov	BYTE PTR _mask$[ebp], 128	
 
 	movsx	edx, BYTE PTR _primera$[ebp]
 	cmp	edx, 1
-	jne	SHORT $LN11@escribir
+	jne	SHORT else1
 
 	mov	eax, DWORD PTR _p$[ebp]
 	and	eax, -2147483641	
-	jns	SHORT $LN17@escribir
+	jns	SHORT modulo
 	dec	eax
 	or	eax, -8			
 	inc	eax
-$LN17@escribir:
+modulo:
 	mov	DWORD PTR _cap$1[ebp], eax
 
-	jmp	SHORT $LN12@escribir
-$LN11@escribir:
+	jmp	SHORT miniFor
+else1:
 	mov	DWORD PTR _cap$1[ebp], 0
-$LN12@escribir:
+miniFor:
 	mov	ecx, DWORD PTR _cap$1[ebp]
 	mov	DWORD PTR _i$3[ebp], ecx
-	jmp	SHORT $LN10@escribir
-$LN8@escribir:
+	jmp	SHORT miniForReq
+Iterate:
 	mov	edx, DWORD PTR _i$3[ebp]
 	add	edx, 1
 	mov	DWORD PTR _i$3[ebp], edx
-$LN10@escribir:
+miniForReq:
 	cmp	DWORD PTR _i$3[ebp], 8
-	jge	$LN9@escribir
+	jge	theend
 	mov	eax, DWORD PTR _pos$[ebp]
 	cmp	eax, DWORD PTR _x$[ebp]
-	jne	SHORT $LN13@escribir
-	jmp	SHORT $LN9@escribir
-$LN13@escribir:
+	jne	SHORT Continue
+	jmp	SHORT theend
+Continue:
 
 	movzx	edx, BYTE PTR _mask$[ebp]
 	mov	ecx, DWORD PTR _i$3[ebp]
@@ -199,12 +199,12 @@ $LN13@escribir:
 	add	ecx, DWORD PTR _pos$[ebp]
 	movzx	edx, BYTE PTR [ecx]
 	test	edx, edx
-	jne	SHORT $LN15@escribir
+	jne	SHORT continue2
 	mov	DWORD PTR tv133[ebp], 0
-	jmp	SHORT $LN16@escribir
-$LN15@escribir:
+	jmp	SHORT dothat
+continue2:
 	mov	DWORD PTR tv133[ebp], 255		; 000000ffH
-$LN16@escribir:
+dothat:
 	mov	al, BYTE PTR tv133[ebp]
 	mov	BYTE PTR _y$6[ebp], al
 
@@ -225,15 +225,14 @@ $LN16@escribir:
 	add	ecx, 1
 	mov	DWORD PTR _pos$[ebp], ecx
 
-	jmp	$LN8@escribir
-$LN9@escribir:
-	jmp	$LN5@escribir
-$LN1@escribir:
+	jmp	Iterate
+theend:
+	jmp	Bigfor
+FinalEnd:
 
 	mov	esp, ebp
 	pop	ebp
 	ret	0
-_escribir ENDP
 	}
 }
 
@@ -245,7 +244,6 @@ void leer(unsigned char *V, unsigned char *s, int p, int l) {
 
 	_asm
 	{
-	;sub	esp, 32	
 	mov	BYTE PTR _mask$[ebp], 128	
 	mov	BYTE PTR _primera$[ebp], 1
 	mov	eax, DWORD PTR _p$[ebp]
