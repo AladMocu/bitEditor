@@ -8,7 +8,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "string.h"
-#define BYTE_TO_BINARY_PATTERN "%c%c%c%c%c%c%c%c"
+#define BYTE_TO_BINARYpATTERN "%c%c%c%c%c%c%c%c"
 #define BYTE_TO_BINARY(byte)                                                   \
 	(byte & 0x80 ? '1' : '0'), (byte & 0x40 ? '1' : '0'),                      \
 		(byte & 0x20 ? '1' : '0'), (byte & 0x10 ? '1' : '0'),                  \
@@ -94,182 +94,177 @@ int main(int argc, char *argv[]) {
 */
 void escribir(unsigned char *V, unsigned char *s, int p) {
 	
-	 char _mask = -1;
-	 char tv133 = -36;
-	 char _x$ = -32; 
-	 char _cap$1 = -28; 
-	 char _k$2 = -24; 
-	 char _pos$ = -20; 
-	 char _i$3 = -16; 
-	 char _i$4 = -12; 
-	 char _j$5 = -8; 
-	 char _y$6 = -4; 
-	 char _primera$ = -3; 
-	 char _tMask$7 = -2; 
-	 char _mask$ = -1; 
-	 char _V$ = 8; 
-	 char _s$ = 12; 
-	 char _p$ = 16;
-	_asm
-	{
-	mov	BYTE PTR _mask[ebp], 128	
-	mov	eax, DWORD PTR _s$[ebp]
-	push	eax
-	call	_strlen
-	add	esp, 4
-	mov	DWORD PTR _x$[ebp], eax
-	mov	DWORD PTR _i$4[ebp], 0
-	jmp	SHORT primerFor
-For1Iteracion:
-	mov	ecx, DWORD PTR _i$4[ebp]
-	add	ecx, 1
-	mov	DWORD PTR _i$4[ebp], ecx  
-primerFor:
-	mov	edx, DWORD PTR _i$4[ebp]  ;linea del error
-	cmp	edx, DWORD PTR _x$[ebp]
-	jge	SHORT salir1
+	
+	_asm {
 
-	mov	eax, DWORD PTR _s$[ebp]
-	add	eax, DWORD PTR _i$4[ebp]
-	movzx	ecx, BYTE PTR [eax]
-	sub	ecx, 48				
-	mov	edx, DWORD PTR _s$[ebp]
-	add	edx, DWORD PTR _i$4[ebp]
-	mov	BYTE PTR [edx], cl
+	
+		mov	BYTE PTR [ebp-1], 128; 00000080H
+	
+		mov	BYTE PTR [ebp-3], 1
+		mov	eax, s
 
-	jmp	SHORT For1Iteracion
-salir1:
+		push	eax
 
-	mov	DWORD PTR _pos$[ebp], 0
+		call	_strlen
 
-	mov	eax, DWORD PTR _p$[ebp]
-	cdq
-	and	edx, 7
-	add	eax, edx
-	sar	eax, 3
-	mov	DWORD PTR _j$5[ebp], eax
-	mov	DWORD PTR _k$2[ebp], 0
-	jmp	SHORT Bigfor1
-Bigfor:
-	mov	eax, DWORD PTR _j$5[ebp]
-	add	eax, 1
-	mov	DWORD PTR _j$5[ebp], eax
-	mov	ecx, DWORD PTR _k$2[ebp]
-	add	ecx, 1
-	mov	DWORD PTR _k$2[ebp], ecx
-Bigfor1:
-	cmp	DWORD PTR _k$2[ebp], 3
-	jge	FinalEnd
+		mov	DWORD PTR [ebp-32], eax
 
-	mov	BYTE PTR _mask$[ebp], 128	
+		mov	DWORD PTR [ebp-12], 0
+		jmp	SHORT  L4_main
+		 L2_main:
+		mov	ecx, DWORD PTR [ebp-12]
+		add	ecx, 1
+		mov	DWORD PTR [ebp-12], ecx
+		 L4_main:
+		mov	edx, DWORD PTR [ebp-12]
+		cmp	edx, DWORD PTR [ebp-32]
+		jge	SHORT  L3_main
+		mov	eax, DWORD PTR s
+		add	eax, DWORD PTR [ebp-12]
+		movzx	ecx, BYTE PTR[eax]
+		sub	ecx, 48; 00000030H
+		mov	edx, DWORD PTR s
+		add	edx, DWORD PTR [ebp-12]
+		mov	BYTE PTR[edx], cl
 
-	movsx	edx, BYTE PTR _primera$[ebp]
-	cmp	edx, 1
-	jne	SHORT else1
+		jmp	SHORT  L2_main
+		 L3_main:
+		
+		mov	DWORD PTR [ebp-20], 0
 
-	mov	eax, DWORD PTR _p$[ebp]
-	and	eax, -2147483641	
-	jns	SHORT modulo
-	dec	eax
-	or	eax, -8			
-	inc	eax
-modulo:
-	mov	DWORD PTR _cap$1[ebp], eax
+		mov	eax, DWORD PTR p
+		cdq
+		and	edx, 7
+		add	eax, edx
+		sar	eax, 3
+		mov	DWORD PTR [ebp-8], eax
+		mov	DWORD PTR [ebp-24], 0
+		jmp	SHORT  L7_main
+		L5_main:
+		mov	eax, DWORD PTR [ebp-8]
+		add	eax, 1
+		mov	DWORD PTR [ebp-8], eax
+		mov	ecx, DWORD PTR [ebp-24]
+		add	ecx, 1
+		mov	DWORD PTR [ebp-24], ecx
+		 L7_main:
+		cmp	DWORD PTR [ebp-24], 3
+		jge	 L1_main
 
-	jmp	SHORT miniFor
-else1:
-	mov	DWORD PTR _cap$1[ebp], 0
-miniFor:
-	mov	ecx, DWORD PTR _cap$1[ebp]
-	mov	DWORD PTR _i$3[ebp], ecx
-	jmp	SHORT miniForReq
-Iterate:
-	mov	edx, DWORD PTR _i$3[ebp]
-	add	edx, 1
-	mov	DWORD PTR _i$3[ebp], edx
-miniForReq:
-	cmp	DWORD PTR _i$3[ebp], 8
-	jge	theend
-	mov	eax, DWORD PTR _pos$[ebp]
-	cmp	eax, DWORD PTR _x$[ebp]
-	jne	SHORT Continue
-	jmp	SHORT theend
-Continue:
+		mov	BYTE PTR [ebp-1], 128; 00000080H
 
-	movzx	edx, BYTE PTR _mask$[ebp]
-	mov	ecx, DWORD PTR _i$3[ebp]
-	sar	edx, cl
-	mov	BYTE PTR _tMask$7[ebp], dl
-	movsx	eax, BYTE PTR _tMask$7[ebp]
-	xor	eax, 255				; 000000ffH
-	mov	ecx, DWORD PTR _V$[ebp]
-	add	ecx, DWORD PTR _j$5[ebp]
-	movzx	edx, BYTE PTR [ecx]
-	and	edx, eax
-	mov	eax, DWORD PTR _V$[ebp]
-	add	eax, DWORD PTR _j$5[ebp]
-	mov	BYTE PTR [eax], dl
+		movsx	edx, BYTE PTR [ebp-3]
+		cmp	edx, 1
+		jne	SHORT  L11_main
 
-	mov	ecx, DWORD PTR _s$[ebp]
-	add	ecx, DWORD PTR _pos$[ebp]
-	movzx	edx, BYTE PTR [ecx]
-	test	edx, edx
-	jne	SHORT continue2
-	mov	DWORD PTR tv133[ebp], 0
-	jmp	SHORT dothat
-continue2:
-	mov	DWORD PTR tv133[ebp], 255		; 000000ffH
-dothat:
-	mov	al, BYTE PTR tv133[ebp]
-	mov	BYTE PTR _y$6[ebp], al
+		mov	eax, DWORD PTR p
+		and	eax, -2147483641; 80000007H
+		jns	SHORT  L17_main
+		dec	eax
+		or eax, -8; fffffff8H
+		inc	eax
+		 L17_main:
+		mov	DWORD PTR [ebp-28], eax
 
-	movsx	ecx, BYTE PTR _tMask$7[ebp]
-	movsx	edx, BYTE PTR _y$6[ebp]
-	and	ecx, edx
-	mov	eax, DWORD PTR _V$[ebp]
-	add	eax, DWORD PTR _j$5[ebp]
-	movzx	edx, BYTE PTR [eax]
-	or	edx, ecx
-	mov	eax, DWORD PTR _V$[ebp]
-	add	eax, DWORD PTR _j$5[ebp]
-	mov	BYTE PTR [eax], dl
+		jmp	SHORT  L12_main
+		 L11_main:
 
-	mov	BYTE PTR _primera$[ebp], 0
+		mov	DWORD PTR [ebp-28], 0
+		 L12_main:
 
-	mov	ecx, DWORD PTR _pos$[ebp]
-	add	ecx, 1
-	mov	DWORD PTR _pos$[ebp], ecx
+		mov	ecx, DWORD PTR [ebp-28]
+		mov	DWORD PTR [ebp-16], ecx
+		jmp	SHORT  L10_main
+		 L8_main:
+		mov	edx, DWORD PTR [ebp-16]
+		add	edx, 1
+		mov	DWORD PTR [ebp-16], edx
+		 L10_main:
+		cmp	DWORD PTR [ebp-16], 8
+		jge	 L9_main
 
-	jmp	Iterate
-theend:
-	jmp	Bigfor
-FinalEnd:
+		mov	eax, DWORD PTR [ebp-20]
+		cmp	eax, DWORD PTR [ebp-32]
+		jne	SHORT  L13_main
 
-	mov	esp, ebp
-	pop	ebp
-	ret	0
+			
+		jmp	 L9_main
+		 L13_main:
 
 
-_strlen:
+		movzx	edx, BYTE PTR [ebp-1]
+		mov	ecx, DWORD PTR [ebp-16]
+		sar	edx, cl
+		mov	BYTE PTR [ebp-2], dl
 
-  push  ecx            ; save and clear out counter
-  xor   ecx, ecx
+			
+		movsx	eax, BYTE PTR [ebp-2]
+		xor eax, 255; 000000ffH
+		mov	ecx, DWORD PTR V
+		add	ecx, DWORD PTR [ebp-8]
+		movzx	edx, BYTE PTR[ecx]
+		and edx, eax
+		mov	eax, DWORD PTR V
+		add	eax, DWORD PTR [ebp-8]
+		mov	BYTE PTR[eax], dl
 
-_strlen_next:
+		mov	ecx, DWORD PTR s
+		add	ecx, DWORD PTR [ebp-20]
+		movzx	edx, BYTE PTR[ecx]
+		test	edx, edx
+		jne	SHORT  L15_main
+		mov	DWORD PTR [ebp-36], 0
+		jmp	SHORT  L16_main
+		 L15_main:
+		mov	DWORD PTR [ebp-36], 255; 000000ffH
+		 L16_main:
+		mov	al, BYTE PTR [ebp-36]
+		mov	BYTE PTR [ebp-4], al
 
-  cmp   [edi],  0 
-  jz    _strlen_null  
+		movsx	ecx, BYTE PTR [ebp-2]
+		movsx	edx, BYTE PTR [ebp-4]
+		and ecx, edx
+		mov	eax, DWORD PTR V
+		add	eax, DWORD PTR [ebp-8]
+		movzx	edx, BYTE PTR[eax]
+		or edx, ecx
+		mov	eax, DWORD PTR V
+		add	eax, DWORD PTR [ebp-8]
+		mov	BYTE PTR[eax], dl
+		mov	BYTE PTR [ebp-3], 0
+		mov	ecx, DWORD PTR [ebp-20]
+		add	ecx, 1
+		mov	DWORD PTR [ebp-20], ecx
+		jmp	 L8_main
+		 L9_main:
+		jmp	 L5_main
+		 L1_main:
+		xor eax, eax
+		mov	esp, ebp
+		pop	ebp
+		ret
 
-  inc   ecx            
-  inc   edi            
-  jmp   _strlen_next   
+			_strlen :
 
-_strlen_null:
+		push  ecx; save and clear out counter
+			xor   ecx, ecx
 
-  mov   eax, ecx       
+			_strlen_next :
 
-  pop   ecx            
-  ret                 
+		cmp[edi], 0
+			jz    _strlen_null
+
+			inc   ecx
+			inc   edi
+			jmp   _strlen_next
+
+			_strlen_null :
+
+		mov   eax, ecx
+
+			pop   ecx
+			ret 0
+
 	}
 
 
@@ -280,115 +275,112 @@ _strlen_null:
 	como chars en s
 */
 void leer(unsigned char *V, unsigned char *s, int p, int l) {
+	
 
-char tv86 = -32						; 
-char _cap$1 = -28					;
-char _j$2 = -24						;
-char _pos2$ = -20					; 
-char _k$3 = -16						; 
-char _pos$ = -12						; 
-char _i$4 = -8						; 
-char _tMask$5 = -3					; 
-char _primera$ = -2					; 
-char _mask$ = -1						; 
-char _V$ = 8							; 
-char _s$ = 12						; 
-char _p$ = 16						;
-char _l$ = 20						;
 	_asm
 	{
-	mov	BYTE PTR _mask$[ebp], 128	
-	mov	BYTE PTR _primera$[ebp], 1
-	mov	eax, DWORD PTR _p$[ebp]
+	mov	[ebp-1], 128		; 00000080H
+
+	mov [ebp-2], 1
+
+	mov	eax, p
 	cdq
 	and	edx, 7
 	add	eax, edx
 	sar	eax, 3
-	mov	DWORD PTR _pos2$[ebp], eax
-	mov	DWORD PTR _pos$[ebp], 0
-	mov	eax, DWORD PTR _p$[ebp]
-	cdq
-	and	edx, 7
-	add	eax, edx
-	sar	eax, 3
-	mov	DWORD PTR _j$2[ebp], eax
-	mov	DWORD PTR _k$3[ebp], 0
-	jmp	SHORT ForLeer
-theendleer:
-	mov	eax, DWORD PTR _j$2[ebp]
-	add	eax, 1
-	mov	DWORD PTR _j$2[ebp], eax
-	mov	ecx, DWORD PTR _k$3[ebp]
+	mov	[ebp-16], eax
+
+	mov	DWORD PTR [ebp-12], 0
+	mov	eax, [ebp-16]
+	mov	DWORD PTR [ebp-24], eax
+	mov	DWORD PTR [ebp-20], 0
+	jmp	SHORT  LN4_main
+ LN2_main:
+	mov	ecx, DWORD PTR [ebp-24]
 	add	ecx, 1
-	mov	DWORD PTR _k$3[ebp], ecx
-ForLeer:
-	cmp	DWORD PTR _k$3[ebp], 4
-	jge	theendleer2
-	mov	BYTE PTR _mask$[ebp], 128	
-	movsx	edx, BYTE PTR _primera$[ebp]
-	cmp	edx, 1
-	jne	SHORT continueleer
-	mov	eax, DWORD PTR _p$[ebp]
-	and	eax, -2147483641			
-	jns	SHORT leercontinue2
-	dec	eax
-	or	eax, -8				
-	inc	eax
-leercontinue2:
-	mov	DWORD PTR _cap$1[ebp], eax
-	jmp	SHORT ContinueLeer3
-continueleer:
-	mov	DWORD PTR _cap$1[ebp], 0
-ContinueLeer3:
-	mov	ecx, DWORD PTR _cap$1[ebp]
-	mov	DWORD PTR _i$4[ebp], ecx
-	jmp	SHORT elseleer
-salirleer:
-	mov	edx, DWORD PTR _i$4[ebp]
+	mov	DWORD PTR [ebp-24], ecx
+	mov	edx, DWORD PTR [ebp-20]
 	add	edx, 1
-	mov	DWORD PTR _i$4[ebp], edx
-elseleer:
-	cmp	DWORD PTR _i$4[ebp], 8
-	jge	SHORT finleer
-	mov	eax, DWORD PTR _pos$[ebp]
-	cmp	eax, DWORD PTR _l$[ebp]
-	jne	SHORT continueleer4
-	jmp	SHORT finleer
-continueleer4:
-	movzx	edx, BYTE PTR _mask$[ebp]
-	mov	ecx, DWORD PTR _i$4[ebp]
-	sar	edx, cl
-	mov	BYTE PTR _tMask$5[ebp], dl
-	mov	eax, DWORD PTR _V$[ebp]
-	add	eax, DWORD PTR _pos2$[ebp]
-	movzx	ecx, BYTE PTR [eax]
-	movsx	edx, BYTE PTR _tMask$5[ebp]
-	and	ecx, edx
-	je	SHORT continueleer5
-	mov	DWORD PTR tv86[ebp], 49			
-	jmp	SHORT jumpnextblock
-continueleer5:
-	mov	DWORD PTR tv86[ebp], 48			
-jumpnextblock:
-	mov	eax, DWORD PTR _s$[ebp]
-	add	eax, DWORD PTR _pos$[ebp]
-	mov	cl, BYTE PTR tv86[ebp]
-	mov	BYTE PTR [eax], cl
-	mov	BYTE PTR _primera$[ebp], 0
-	mov	edx, DWORD PTR _pos$[ebp]
-	add	edx, 1
-	mov	DWORD PTR _pos$[ebp], edx
-	jmp	SHORT salirleer
-finleer:
-	mov	eax, DWORD PTR _pos2$[ebp]
+	mov	DWORD PTR [ebp-20], edx
+ LN4_main:
+	cmp	DWORD PTR [ebp-20], 4
+	jge	 LN1_main
+	mov	BYTE PTR [ebp-1], 128		; 00000080H
+	movsx	eax, BYTE PTR[ebp-2]
+	cmp	eax, 1
+	jne	SHORT  LN8_main
+	mov	ecx, DWORD PTR p
+	and	ecx, -2147483641			; 80000007H
+	jns	SHORT  LN14_main
+	dec	ecx
+	or	ecx, -8					; fffffff8H
+	inc	ecx
+ LN14_main:
+	mov	DWORD PTR [ebp-28], ecx
+
+		jmp	SHORT  LN9_main
+ LN8_main:
+
+	mov	DWORD PTR [ebp-28], 0
+ LN9_main:
+
+		mov	edx, DWORD PTR [ebp-28]
+	mov	DWORD PTR [ebp-8], edx
+	jmp	SHORT  LN7_main
+ LN5_main:
+	mov	eax, DWORD PTR [ebp-8]
 	add	eax, 1
-	mov	DWORD PTR _pos2$[ebp], eax
-	jmp	theendleer
-theendleer2:
+	mov	DWORD PTR [ebp-8], eax
+ LN7_main:
+	cmp	DWORD PTR [ebp-8], 8
+	jge	SHORT  LN6_main
+
+		mov	ecx, DWORD PTR [ebp-12]
+	cmp	ecx, DWORD PTR l
+	jne	SHORT  LN10_main
+
+		jmp	SHORT  LN6_main
+ LN10_main:
+
+	movzx	edx, BYTE PTR [ebp-1]
+	mov	ecx, DWORD PTR [ebp-8]
+	sar	edx, cl
+	mov	BYTE PTR [ebp-3], dl
+
+		mov	eax, DWORD PTR V
+	add	eax, [ebp-16]
+	movzx	ecx, BYTE PTR [eax]
+	movsx	edx, BYTE PTR [ebp-3]
+	and	ecx, edx
+	je	SHORT  LN12_main
+	mov	DWORD PTR [ebp-32], 49			; 00000031H
+	jmp	SHORT  LN13_main
+ LN12_main:
+	mov	DWORD PTR [ebp-32], 48			; 00000030H
+ LN13_main:
+	mov	eax, DWORD PTR s
+	add	eax, DWORD PTR [ebp-12]
+	mov	cl, BYTE PTR [ebp-32]
+	mov	BYTE PTR [eax], cl
+
+		mov	BYTE PTR[ebp-2], 0
+
+		mov	edx, DWORD PTR [ebp-12]
+	add	edx, 1
+	mov	DWORD PTR [ebp-12], edx
+
+		jmp	SHORT  LN5_main
+ LN6_main:
+
+	mov	eax, [ebp-16]
+	add	eax, 1
+	mov	[ebp-16], eax
+	jmp	 LN2_main
+ LN1_main:
+
+	xor	eax, eax
 	mov	esp, ebp
-	pop	ebp
-	ret	0
-
-
+	pop ebp
+	ret 0
 	}
 }
